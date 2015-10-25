@@ -14,16 +14,11 @@
   (if-let [value (redis/wcar (get-redis-connection-pool) (redis/lindex list-name 0))]
     (parse-string value true)))
 
-
-;(defn set-domain-map-in-redis! [k v]
-;  "Stores value v against a key k in Redis. Returns value v"
-;  (and k v (redis/wcar (get-redis-connection-pool)
-;                       (redis/setex k (or (env :redis-ttl-seconds) 1800) v))
-;       v))
-
 (defn db-connect []
   (let [datomic (look-up-datomic "datomic")
         uri (str "datomic:sql://" (:host datomic) ":" (:port datomic) "/customer")
         conn (d/connect uri)
         db (d/db conn)]
     db))
+
+; TODO: remove :sql: from here and put the storage into REDIS
